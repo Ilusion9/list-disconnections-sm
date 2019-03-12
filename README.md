@@ -1,4 +1,8 @@
 # Players History
 This plugin will display informations of disconnected players (steamid, name, time).
 
-You need sourcemod 1.10 or higher because of enum structs.
+# Example
+```
+01. STEAM_1:1:XXX - Ilusion9 - 3m ago
+02. STEAM_1:1:YYYZZZ - Player1 - 25h ago
+```
