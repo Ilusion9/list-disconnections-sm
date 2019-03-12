@@ -71,7 +71,7 @@ public Action Command_PlayerHistory(int client, int args)
 
 		char time[65];
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
-		PrintToConsole(client, "%02d. %s : %s : %s ago", i + 1, info.steam, info.name, time);
+		PrintToConsole(client, "%02d. %s - %s - %s ago", i + 1, info.steam, info.name, time);
 	}
 	
 	return Plugin_Handled;
