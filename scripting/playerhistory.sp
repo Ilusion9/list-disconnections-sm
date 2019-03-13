@@ -14,7 +14,7 @@ public Plugin myinfo =
 
 enum struct PlayerInfo
 {
-	char steam[33];
+	char steam[65];
 	char name[65];
 	int time;
 };
@@ -69,7 +69,7 @@ public Action Command_PlayerHistory(int client, int args)
 		PlayerInfo info;
 		g_Players.GetArray(i, info);
 
-		char time[33];
+		char time[65];
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
 		PrintToConsole(client, "%02d. %s - %s - %s ago", i + 1, info.steam, info.name, time);
 	}
