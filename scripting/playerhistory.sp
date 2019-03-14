@@ -28,7 +28,7 @@ public void OnPluginStart()
 	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Post);
 	
 	RegConsoleCmd("sm_playerhistory", Command_PlayerHistory);
-	g_Cvar_Size = CreateConVar("sm_playerhistory_size", "20", _, 0, true, 1.0);
+	g_Cvar_Size = CreateConVar("sm_playerhistory_size", "10", _, 0, true, 1.0);
 }
 
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
@@ -73,7 +73,7 @@ public Action Command_PlayerHistory(int client, int args)
 		g_Players.GetArray(i, info);
 
 		FormatTimeDuration(buffer, sizeof(buffer), GetTime() - info.time);
-		PrintToConsole(client, "%02d. \"%s\" %s - %s ago", i + 1, info.name, info.steam, buffer);
+		PrintToConsole(client, "%02d. %s - %s - %s ago", i + 1, info.steam, info.name, buffer);
 	}
 	
 	return Plugin_Handled;
