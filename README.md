@@ -5,7 +5,7 @@ This plugin will display informations of disconnected players (steamid, name, ti
 ```
 Players History
 -------------------------
-01. STEAM_1:1:1234567X - Ilusion9 - 3m ago
-02. STEAM_1:1:1234567Y - baitzera - 1h 47m ago
-03. STEAM_1:1:1234567Z - Player1 - 25h ago
+01. STEAM_1:1:1234567X "Ilusion9" - 3m ago
+02. STEAM_1:1:1234567Y "baitzera" - 1h 47m ago
+03. STEAM_1:1:1234567Z "Player1" - 25h ago
 ```
