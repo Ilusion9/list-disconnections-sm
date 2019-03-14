@@ -73,7 +73,7 @@ public Action Command_PlayerHistory(int client, int args)
 		g_Players.GetArray(i, info);
 
 		FormatTimeDuration(buffer, sizeof(buffer), GetTime() - info.time);
-		PrintToConsole(client, "%02d. %s - %s - %s ago", i + 1, info.steam, info.name, buffer);
+		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, buffer);
 	}
 	
 	return Plugin_Handled;
