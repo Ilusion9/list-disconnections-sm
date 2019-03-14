@@ -62,16 +62,18 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 
 public Action Command_PlayerHistory(int client, int args)
 {
-	PrintToConsole(client, "Players History: \n");
+	char buffer[65];
+	
+	PrintToConsole(client, "Players History");
+	PrintToConsole(client, "-------------------------");
 	
 	for (int i = 0; i < g_Players.Length; i++)
 	{
 		PlayerInfo info;
 		g_Players.GetArray(i, info);
 
-		char time[65];
-		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
-		PrintToConsole(client, "%02d. %s - %s - %s ago", i + 1, info.steam, info.name, time);
+		FormatTimeDuration(buffer, sizeof(buffer), GetTime() - info.time);
+		PrintToConsole(client, "%02d. %s - %s - %s ago", i + 1, info.steam, info.name, buffer);
 	}
 	
 	return Plugin_Handled;
