@@ -17,5 +17,5 @@ sm_playerhistory
 
 # Cvars
 ```
-sm_playerhistory_size
+sm_playerhistory_size <value>
 ```
