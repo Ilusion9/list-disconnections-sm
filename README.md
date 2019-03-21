@@ -9,3 +9,8 @@ Players History
 02. STEAM_1:1:123456XY "Ilusion9" - 3m ago
 03. STEAM_1:1:123456YZ "Fallen" - 1h 47m ago
 ```
+
+# Cvars
+```
+sm_playerhistory_size 10
+```
