@@ -1,6 +1,8 @@
 # Players History
 This plugin will display informations of disconnected players (steamid, name, time).
+
 Commands: sm_playerhistory
+
 Cvars: sm_playerhistory_size
 
 # Example
