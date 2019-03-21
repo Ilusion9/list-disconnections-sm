@@ -1,7 +1,7 @@
 # Players History
 This plugin will display informations of disconnected players (steamid, name, time).
 
-# Output sm_playerhistory
+# sm_playerhistory
 ```
 Players History
 -------------------------
