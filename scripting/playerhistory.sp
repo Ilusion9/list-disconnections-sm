@@ -44,25 +44,25 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	info.time = GetTime();
 	
-	if (g_Players.Length)
+	if (g_Players.Length > 0)
 	{
 		g_Players.ShiftUp(0);
 		g_Players.SetArray(0, info);
+		
+		if (g_Players.Length > g_Cvar_Size.IntValue)
+		{
+			g_Players.Resize(g_Cvar_Size.IntValue);
+		}
 	}
 	else
 	{
 		g_Players.PushArray(info);
 	}
-	
-	if (g_Players.Length > g_Cvar_Size.IntValue)
-	{
-		g_Players.Resize(g_Cvar_Size.IntValue);
-	}
 }
 
 public Action Command_PlayerHistory(int client, int args)
 {
-	char buffer[65];
+	char time[65];
 	
 	PrintToConsole(client, "Players History");
 	PrintToConsole(client, "-------------------------");
@@ -72,8 +72,8 @@ public Action Command_PlayerHistory(int client, int args)
 		PlayerInfo info;
 		g_Players.GetArray(i, info);
 
-		FormatTimeDuration(buffer, sizeof(buffer), GetTime() - info.time);
-		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, buffer);
+		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
+		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, time);
 	}
 	
 	return Plugin_Handled;
