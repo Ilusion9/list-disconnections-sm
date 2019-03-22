@@ -85,17 +85,17 @@ int FormatTimeDuration(char[] buffer, int maxlen, int time)
 	int hours = (time / 3600) % 24;
 	int minutes = (time / 60) % 60;
 
-	if (days > 0)
+	if (days)
 	{
 		return Format(buffer, maxlen, "%dd %dh %dm", days, hours, minutes);		
 	}
 
-	if (hours > 0)
+	if (hours)
 	{
 		return Format(buffer, maxlen, "%dh %dm", hours, minutes);		
 	}
 	
-	if (minutes > 0)
+	if (minutes)
 	{
 		return Format(buffer, maxlen, "%dm", minutes);		
 	}
