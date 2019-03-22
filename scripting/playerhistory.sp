@@ -14,8 +14,8 @@ public Plugin myinfo =
 
 enum struct PlayerInfo
 {
-	char steam[65];
-	char name[65];
+	char steam[64];
+	char name[128];
 	int time;
 };
 
@@ -62,7 +62,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 
 public Action Command_PlayerHistory(int client, int args)
 {
-	char time[65];
+	char time[100];
 	PlayerInfo info;
 
 	PrintToConsole(client, "Players History");
