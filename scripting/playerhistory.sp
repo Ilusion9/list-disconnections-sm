@@ -44,19 +44,19 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	info.time = GetTime();
 	
-	if (g_Players.Length > 0)
+	if (g_Players.Length)
 	{
 		g_Players.ShiftUp(0);
 		g_Players.SetArray(0, info);
-		
-		if (g_Players.Length > g_Cvar_Size.IntValue)
-		{
-			g_Players.Resize(g_Cvar_Size.IntValue);
-		}
 	}
 	else
 	{
 		g_Players.PushArray(info);
+	}
+
+	if (g_Players.Length > g_Cvar_Size.IntValue)
+	{
+		g_Players.Resize(g_Cvar_Size.IntValue);
 	}
 }
 
