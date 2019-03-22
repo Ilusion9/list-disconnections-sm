@@ -62,7 +62,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 
 public Action Command_PlayerHistory(int client, int args)
 {
-	char time[100];
+	char time[64];
 	PlayerInfo info;
 
 	PrintToConsole(client, "Players History");
