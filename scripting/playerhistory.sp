@@ -24,36 +24,53 @@ ConVar g_Cvar_Size;
 
 public void OnPluginStart()
 {
+	/* Create an arraylist of PlayerInfo */
 	g_Players = new ArrayList(sizeof(PlayerInfo));
+	
+	/* Hook the disconnect event */
 	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Post);
 	
+	/* Register a new command */
 	RegConsoleCmd("sm_playerhistory", Command_PlayerHistory);
+	
+	/* Register a new convar */
 	g_Cvar_Size = CreateConVar("sm_playerhistory_size", "10", _, 0, true, 1.0);
 }
 
+/* Get informations of the player who triggered the disconnect event and save it into an array */
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
-{
+{	
 	PlayerInfo info;
+	
+	/* Get the steamid of player from "networkid" field */
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
+	/* Check if the player is BOT */
 	if (StrEqual(info.steam, "BOT")) return;
 	
+	/* Get the name of player from "name" field */
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
+	
+	/* Get the current unix time */
 	info.time = GetTime();
 	
 	if (g_Players.Length)
 	{
+		/* See the arraylist as a stack */
 		g_Players.ShiftUp(0);
 		g_Players.SetArray(0, info);
 		
+		/* Keep "sm_playerhistory_size" players in the arraylist */
 		if (g_Players.Length > g_Cvar_Size.IntValue) g_Players.Resize(g_Cvar_Size.IntValue);
 	}
 	else
 	{
+		/* If the arraylist is empty, push the object */
 		g_Players.PushArray(info);
 	}
 }
 
+/* Show info of disconnected players when clients type sm_playerhistory command */
 public Action Command_PlayerHistory(int client, int args)
 {
 	char time[64];
@@ -64,9 +81,12 @@ public Action Command_PlayerHistory(int client, int args)
 	
 	for (int i = 0; i < g_Players.Length; i++)
 	{
+		/* Get object from arraylist */
 		g_Players.GetArray(i, info);
-		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
 		
+		/* Transform the unix time into d h m format */
+		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
+
 		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, time);
 	}
 	
