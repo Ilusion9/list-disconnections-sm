@@ -37,7 +37,6 @@ public void OnPluginStart()
 	g_Cvar_Size = CreateConVar("sm_playerhistory_size", "10", _, 0, true, 1.0);
 }
 
-/* Get informations of the player who triggered the disconnect event and save it into an array */
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
 {	
 	PlayerInfo info;
@@ -70,7 +69,6 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	}
 }
 
-/* Show info of disconnected players when clients type sm_playerhistory command */
 public Action Command_PlayerHistory(int client, int args)
 {
 	char time[64];
