@@ -22,6 +22,7 @@ enum struct PlayerInfo
 ArrayList g_Players;
 ConVar g_Cvar_Size;
 
+/* When this plugin starts */
 public void OnPluginStart()
 {
 	/* Create an arraylist of PlayerInfo */
@@ -37,6 +38,7 @@ public void OnPluginStart()
 	g_Cvar_Size = CreateConVar("sm_playerhistory_size", "10", _, 0, true, 1.0);
 }
 
+/* When player_disconnect event is triggered */
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
 {	
 	PlayerInfo info;
@@ -69,6 +71,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	}
 }
 
+/* When sm_playerhistory command is triggered */
 public Action Command_PlayerHistory(int client, int args)
 {
 	char time[64];
