@@ -43,13 +43,13 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 {	
 	PlayerInfo info;
 	
-	/* Get the steamid of player from "networkid" field */
+	/* Get the steamid of the player */
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
 	/* Check if the player is not fake */
 	if (StrEqual(info.steam, "BOT")) return;
 	
-	/* Get the name of player from "name" field */
+	/* Get the name of the player */
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	
 	/* Get the current unix time */
@@ -82,13 +82,13 @@ public Action Command_PlayerHistory(int client, int args)
 	
 	for (int i = 0; i < g_Players.Length; i++)
 	{
-		/* Get object from arraylist */
+		/* Get the object from the arraylist */
 		g_Players.GetArray(i, info);
 		
 		/* Transform the unix time into "d h m ago" format */
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
 		
-		/* Print to console */
+		/* Print data to client console */
 		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, time);
 	}
 	
