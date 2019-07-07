@@ -46,7 +46,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	/* Get the steamid of player from "networkid" field */
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
-	/* Check if the player is BOT */
+	/* Check if the player is not fake */
 	if (StrEqual(info.steam, "BOT")) return;
 	
 	/* Get the name of player from "name" field */
