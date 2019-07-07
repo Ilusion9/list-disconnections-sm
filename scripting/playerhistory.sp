@@ -88,7 +88,7 @@ public Action Command_PlayerHistory(int client, int args)
 		/* Transform the unix time into "d h m ago" format */
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
 		
-		/* Print data to client console */
+		/* Print the data to the client's console */
 		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, time);
 	}
 	
