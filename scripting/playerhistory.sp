@@ -82,9 +82,10 @@ public Action Command_PlayerHistory(int client, int args)
 		/* Get object from arraylist */
 		g_Players.GetArray(i, info);
 		
-		/* Transform the unix time into d h m format */
+		/* Transform the unix time into "d h m ago" format */
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
-
+		
+		/* Print to console */
 		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, time);
 	}
 	
