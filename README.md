@@ -1,5 +1,6 @@
 # Players History
 This plugin will display informations of disconnected players through sm_playerhistory command.
+
 SM 1.10 (or a recent version) is required.
 
 # Example
