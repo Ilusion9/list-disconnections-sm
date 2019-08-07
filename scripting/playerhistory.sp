@@ -50,7 +50,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	/* Get the name of the player */
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	
-	/* Get the current unix time */
+	/* Get the current unix time - the time when this player disconnects */
 	info.time = GetTime();
 	
 	if (g_Players.Length)
