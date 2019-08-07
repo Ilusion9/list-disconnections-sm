@@ -22,14 +22,13 @@ enum struct PlayerInfo
 ArrayList g_Players;
 ConVar g_Cvar_Size;
 
-/* When this plugin starts */
 public void OnPluginStart()
 {
 	/* Create an arraylist of PlayerInfo */
 	g_Players = new ArrayList(sizeof(PlayerInfo));
 	
 	/* Hook the disconnect event */
-	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Post);
+	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	
 	/* Register a new command */
 	RegConsoleCmd("sm_playerhistory", Command_PlayerHistory);
@@ -38,7 +37,6 @@ public void OnPluginStart()
 	g_Cvar_Size = CreateConVar("sm_playerhistory_size", "10", _, 0, true, 1.0);
 }
 
-/* When player_disconnect event is triggered */
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
 {	
 	PlayerInfo info;
@@ -46,7 +44,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	/* Get the steamid of the player */
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
-	/* Check if the player is not fake */
+	/* Don't save informations about bots */
 	if (StrEqual(info.steam, "BOT")) return;
 	
 	/* Get the name of the player */
@@ -61,17 +59,16 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 		g_Players.ShiftUp(0);
 		g_Players.SetArray(0, info);
 		
-		/* Keep "sm_playerhistory_size" players in the arraylist */
+		/* Keep maximum "sm_playerhistory_size" players in the arraylist */
 		if (g_Players.Length > g_Cvar_Size.IntValue) g_Players.Resize(g_Cvar_Size.IntValue);
 	}
 	else
 	{
-		/* If the arraylist is empty, push the object */
+		/* If the arraylist is empty, see the arraylist as normal */
 		g_Players.PushArray(info);
 	}
 }
 
-/* When sm_playerhistory command is triggered */
 public Action Command_PlayerHistory(int client, int args)
 {
 	char time[64];
