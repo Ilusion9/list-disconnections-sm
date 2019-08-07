@@ -17,7 +17,7 @@ enum struct PlayerInfo
 	char steam[64];
 	char name[128];
 	int time;
-};
+}
 
 ArrayList g_Players;
 ConVar g_Cvar_Size;
