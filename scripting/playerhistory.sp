@@ -55,7 +55,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	
 	if (g_Players.Length)
 	{
-		/* See the arraylist as a stack */
+		/* See the arraylist as a stack, so we can keep the latest disconnections at the top of it */
 		g_Players.ShiftUp(0);
 		g_Players.SetArray(0, info);
 		
