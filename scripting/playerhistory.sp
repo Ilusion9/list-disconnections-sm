@@ -24,7 +24,7 @@ ConVar g_Cvar_Size;
 
 public void OnPluginStart()
 {
-	/* Create an arraylist of PlayerInfo */
+	/* Create a list of PlayerInfo */
 	g_Players = new ArrayList(sizeof(PlayerInfo));
 	
 	/* Hook the disconnect event */
@@ -50,21 +50,21 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	/* Get the name of the player */
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	
-	/* Get the current unix time - the time when this player disconnects */
+	/* Get the time when this player is disconnecting */
 	info.time = GetTime();
 	
 	if (g_Players.Length)
 	{
-		/* See the arraylist as a stack, so we can keep the latest disconnections at the top of it */
+		/* See the list as a stack, so we can keep the latest disconnections at the top */
 		g_Players.ShiftUp(0);
 		g_Players.SetArray(0, info);
 		
-		/* Keep maximum "sm_playerhistory_size" players in the arraylist */
+		/* Keep maximum "sm_playerhistory_size" players in the list */
 		if (g_Players.Length > g_Cvar_Size.IntValue) g_Players.Resize(g_Cvar_Size.IntValue);
 	}
 	else
 	{
-		/* If the arraylist is empty, see the arraylist as normal */
+		/* If the list is empty, see it as normal */
 		g_Players.PushArray(info);
 	}
 }
@@ -77,6 +77,7 @@ public Action Command_PlayerHistory(int client, int args)
 	PrintToConsole(client, "Players History");
 	PrintToConsole(client, "-------------------------");
 	
+	/* Display all informations saved into the list */
 	for (int i = 0; i < g_Players.Length; i++)
 	{
 		/* Get the object from the arraylist */
