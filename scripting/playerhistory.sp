@@ -24,33 +24,22 @@ ConVar g_Cvar_Size;
 
 public void OnPluginStart()
 {
-	/* Create a list of PlayerInfo */
 	g_Players = new ArrayList(sizeof(PlayerInfo));
-	
-	/* Hook the disconnect event */
-	HookEvent("player_disconnect", Event_PlayerDisconnect);
-	
-	/* Register a new command */
-	RegConsoleCmd("sm_playerhistory", Command_PlayerHistory);
-	
-	/* Register a new convar */
 	g_Cvar_Size = CreateConVar("sm_playerhistory_size", "10", _, 0, true, 1.0);
+
+	HookEvent("player_disconnect", Event_PlayerDisconnect);
+	RegConsoleCmd("sm_playerhistory", Command_PlayerHistory);
 }
 
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
 {	
 	PlayerInfo info;
-	
-	/* Get the steamid of the player */
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
 	/* Don't save informations about bots */
 	if (StrEqual(info.steam, "BOT")) return;
 	
-	/* Get the name of the player */
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
-	
-	/* Get the time when this player is disconnecting */
 	info.time = GetTime();
 	
 	if (g_Players.Length)
@@ -77,16 +66,13 @@ public Action Command_PlayerHistory(int client, int args)
 	PrintToConsole(client, "Players History");
 	PrintToConsole(client, "-------------------------");
 	
-	/* Display all informations saved into the list */
 	for (int i = 0; i < g_Players.Length; i++)
 	{
-		/* Get the object from the arraylist */
 		g_Players.GetArray(i, info);
 		
 		/* Transform the unix time into "d h m ago" format */
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
 		
-		/* Print the data to the client's console */
 		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, time);
 	}
 	
