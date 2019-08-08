@@ -53,7 +53,6 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	}
 	else
 	{
-		/* If the list is empty, see it as normal */
 		g_Players.PushArray(info);
 	}
 }
