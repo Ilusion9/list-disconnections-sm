@@ -35,19 +35,13 @@ public void OnPluginStart()
 
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
 {	
-	/* Create a new PlayerInfo object */
 	PlayerInfo info;
-	
-	/* Get the steamid of the player into the object */
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
 	/* Don't save informations about bots */
 	if (StrEqual(info.steam, "BOT")) return;
 	
-	/* Get the name of the player into the object */
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
-	
-	/* Get the current unix time into the object */
 	info.time = GetTime();
 	
 	if (g_Players.Length)
@@ -75,7 +69,6 @@ public Action Command_PlayerHistory(int client, int args)
 	
 	for (int i = 0; i < g_Players.Length; i++)
 	{
-		/* Get the current object from the list */
 		g_Players.GetArray(i, info);
 		
 		/* Transform the unix time into "d h m ago" format */
