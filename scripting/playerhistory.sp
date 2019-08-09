@@ -46,7 +46,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	
 	if (g_Players.Length)
 	{
-		/* See the list as a stack and insert the object */
+		/* Insert the object at the top of the list */
 		g_Players.ShiftUp(0);
 		g_Players.SetArray(0, info);
 		
