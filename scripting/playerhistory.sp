@@ -24,36 +24,39 @@ ConVar g_Cvar_Size;
 
 public void OnPluginStart()
 {
+	/* Create a new list of PlayerInfo objects */
 	g_Players = new ArrayList(sizeof(PlayerInfo));
-	g_Cvar_Size = CreateConVar("sm_playerhistory_size", "10", _, 0, true, 1.0);
-
+	
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	RegConsoleCmd("sm_playerhistory", Command_PlayerHistory);
+	
+	g_Cvar_Size = CreateConVar("sm_playerhistory_size", "10", _, 0, true, 1.0);
 }
 
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
 {	
+	/* Create a new PlayerInfo object */
 	PlayerInfo info;
 	
-	/* Get the steamid of the player */
+	/* Get the steamid of the player into the object */
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
 	/* Don't save informations about bots */
 	if (StrEqual(info.steam, "BOT")) return;
 	
-	/* Get the name of the player */
+	/* Get the name of the player into the object */
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	
-	/* Get the current unix time */
+	/* Get the current unix time into the object */
 	info.time = GetTime();
 	
 	if (g_Players.Length)
 	{
-		/* See the list as a stack and insert the player's info */
+		/* See the list as a stack and insert the object */
 		g_Players.ShiftUp(0);
 		g_Players.SetArray(0, info);
 		
-		/* Keep maximum "sm_playerhistory_size" players in the list */
+		/* Keep maximum "sm_playerhistory_size" objects in the list */
 		if (g_Players.Length > g_Cvar_Size.IntValue) g_Players.Resize(g_Cvar_Size.IntValue);
 	}
 	else
@@ -72,6 +75,7 @@ public Action Command_PlayerHistory(int client, int args)
 	
 	for (int i = 0; i < g_Players.Length; i++)
 	{
+		/* Get the current object from the list */
 		g_Players.GetArray(i, info);
 		
 		/* Transform the unix time into "d h m ago" format */
