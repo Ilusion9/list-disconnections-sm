@@ -15,7 +15,7 @@ public Plugin myinfo =
 enum struct PlayerInfo
 {
 	char steam[64];
-	char name[128];
+	char name[64];
 	int time;
 }
 
