@@ -38,7 +38,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	PlayerInfo info;
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
-	if (StrEqual(info.steam, "BOT")) {
+	if (StrEqual(info.steam, "BOT", false)) {
 		return;
 	}
 	
