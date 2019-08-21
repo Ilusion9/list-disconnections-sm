@@ -5,9 +5,9 @@
 
 public Plugin myinfo =
 {
-    name = "List disconnections",
+    name = "sm_last command",
     author = "Ilusion9",
-    description = "Informations of disconnected players.",
+    description = "Informations of the last disconnected players.",
     version = "2.0",
     url = "https://github.com/Ilusion9/"
 };
@@ -25,10 +25,10 @@ ConVar g_Cvar_MaxSize;
 public void OnPluginStart()
 {
 	g_Players = new ArrayList(sizeof(PlayerInfo));
-	g_Cvar_MaxSize = CreateConVar("sm_listdc_size", "10", _, 0, true, 1.0);
+	g_Cvar_MaxSize = CreateConVar("sm_last_size", "10", _, 0, true, 1.0);
 
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
-	RegConsoleCmd("sm_listdc", Command_ListDc);
+	RegConsoleCmd("sm_last", Command_Last);
 }
 
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
@@ -57,11 +57,12 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	}
 }
 
-public Action Command_ListDc(int client, int args)
+public Action Command_Last(int client, int args)
 {
 	char time[64];
 	PlayerInfo info;
 
+	PrintToConsole(client, "Last disconnections");
 	PrintToConsole(client, "-------------------------");
 	
 	for (int i = 0; i < g_Players.Length; i++)
