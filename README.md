@@ -1,11 +1,11 @@
-# Players History
-This plugin will display informations of disconnected players through sm_playerhistory command.
+# List disconnections
+This plugin will display informations of disconnected players through sm_listdc or sm_lastdc command.
 
 SM 1.10 (or a recent version) is required.
 
 # Example
 ```
-Players History
+Last 3 disconnections
 -------------------------
 01. STEAM_1:1:123456XX "decoy" - 50s ago
 02. STEAM_1:1:123456XY "Ilusion9" - 3m ago
@@ -14,5 +14,5 @@ Players History
 
 # Cvars
 ```
-sm_playerhistory_size 10
+sm_disconnections_size 10
 ```
