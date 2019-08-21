@@ -1,5 +1,5 @@
-# sm_last command
-This plugin will display informations of disconnected players through sm_last command.
+# Disconnections list
+This plugin will display informations about the last disconnected players through sm_listdc command.
 
 # Output example
 ```
@@ -12,5 +12,5 @@ Last disconnections
 
 # Cvars
 ```
-sm_last_size 10
+sm_listdc_size 10
 ```
