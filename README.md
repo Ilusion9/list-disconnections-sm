@@ -3,7 +3,7 @@ This plugin will display informations about the last disconnected players throug
 
 # Output example
 ```
-Last disconnections
+Disconnections list
 -------------------------
 01. STEAM_1:1:123456XX "decoy" - 50s ago
 02. STEAM_1:1:123456XY "Ilusion9" - 3m ago
