@@ -11,5 +11,5 @@ This plugin will display informations of disconnected players through sm_last co
 
 # Cvars
 ```
-sm_listdc_size 10
+sm_last_size 10
 ```
