@@ -5,7 +5,7 @@
 
 public Plugin myinfo =
 {
-    name = "List the last disconnections",
+    name = "Disconnections list",
     author = "Ilusion9",
     description = "Informations about the last disconnected players.",
     version = "2.0",
