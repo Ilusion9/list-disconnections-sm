@@ -3,6 +3,7 @@ This plugin will display informations of disconnected players through sm_last co
 
 # Output example
 ```
+Last disconnections
 -------------------------
 01. STEAM_1:1:123456XX "decoy" - 50s ago
 02. STEAM_1:1:123456XY "Ilusion9" - 3m ago
