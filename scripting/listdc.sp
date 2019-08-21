@@ -64,7 +64,7 @@ public Action Command_ListDc(int client, int args)
 	char time[64];
 	PlayerInfo info;
 	
-	PrintToConsole(client, "Last %d disconnections", g_Players.Length);
+	PrintToConsole(client, "Last disconnections");
 	PrintToConsole(client, "-------------------------");
 	
 	for (int i = 0; i < g_Players.Length; i++)
