@@ -1,7 +1,5 @@
 # List disconnections
-This plugin will display informations of disconnected players through sm_listdc or sm_lastdc command.
-
-SM 1.10 (or a recent version) is required.
+This plugin will display informations of disconnected players through sm_listdc or sm_lastdc commands.
 
 # Example
 ```
