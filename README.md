@@ -1,9 +1,8 @@
 # List disconnections
-This plugin will display informations of disconnected players through sm_listdc or sm_lastdc commands.
+This plugin will display informations of disconnected players through sm_listdc command.
 
-# Example
+# Output example
 ```
-Last 3 disconnections
 -------------------------
 01. STEAM_1:1:123456XX "decoy" - 50s ago
 02. STEAM_1:1:123456XY "Ilusion9" - 3m ago
@@ -12,5 +11,5 @@ Last 3 disconnections
 
 # Cvars
 ```
-sm_disconnections_size 10
+sm_listdc_size 10
 ```
