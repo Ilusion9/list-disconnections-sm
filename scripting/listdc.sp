@@ -25,12 +25,12 @@ ConVar g_Cvar_MaxSize;
 public void OnPluginStart()
 {
 	g_Players = new ArrayList(sizeof(PlayerInfo));
-	
+	g_Cvar_MaxSize = CreateConVar("sm_disconnections_size", "10", _, 0, true, 1.0);
+
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
+	
 	RegConsoleCmd("sm_listdc", Command_ListDc);
 	RegConsoleCmd("sm_lastdc", Command_ListDc);
-
-	g_Cvar_MaxSize = CreateConVar("sm_disconnections_size", "10", _, 0, true, 1.0);
 }
 
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
@@ -63,7 +63,7 @@ public Action Command_ListDc(int client, int args)
 {
 	char time[64];
 	PlayerInfo info;
-
+	
 	PrintToConsole(client, "Last %d disconnections", g_Players.Length);
 	PrintToConsole(client, "-------------------------");
 	
@@ -74,7 +74,7 @@ public Action Command_ListDc(int client, int args)
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
 		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, time);
 	}
-	
+
 	return Plugin_Handled;
 }
 
