@@ -5,7 +5,7 @@
 
 public Plugin myinfo =
 {
-    name = "List disconnections",
+    name = "Show last disconnections",
     author = "Ilusion9",
     description = "Informations of disconnected players.",
     version = "2.0",
@@ -28,9 +28,7 @@ public void OnPluginStart()
 	g_Cvar_MaxSize = CreateConVar("sm_disconnections_size", "10", _, 0, true, 1.0);
 
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
-	
-	RegConsoleCmd("sm_listdc", Command_ListDc);
-	RegConsoleCmd("sm_lastdc", Command_ListDc);
+	RegConsoleCmd("sm_lastdc", Command_LastDc);
 }
 
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
@@ -59,7 +57,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	}
 }
 
-public Action Command_ListDc(int client, int args)
+public Action Command_LastDc(int client, int args)
 {
 	char time[64];
 	PlayerInfo info;
