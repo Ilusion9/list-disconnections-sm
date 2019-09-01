@@ -19,13 +19,13 @@ enum struct PlayerInfo
 	int time;
 }
 
-ArrayList g_Players;
-ConVar g_Cvar_MaxSize;
+ArrayList g_List_Players;
+ConVar g_Cvar_ListSize;
 
 public void OnPluginStart()
 {
-	g_Players = new ArrayList(sizeof(PlayerInfo));
-	g_Cvar_MaxSize = CreateConVar("sm_listdc_size", "10", _, 0, true, 1.0);
+	g_List_Players = new ArrayList(sizeof(PlayerInfo));
+	g_Cvar_ListSize = CreateConVar("sm_listdc_size", "10", _, 0, true, 1.0);
 
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	RegConsoleCmd("sm_listdc", Command_ListDisconnections);
@@ -43,17 +43,17 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	info.time = GetTime();
 	
-	if (g_Players.Length)
+	if (g_List_Players.Length)
 	{
-		g_Players.ShiftUp(0);
-		g_Players.SetArray(0, info);
+		g_List_Players.ShiftUp(0);
+		g_List_Players.SetArray(0, info);
 		
-		if (g_Players.Length > g_Cvar_MaxSize.IntValue) {
-			g_Players.Resize(g_Cvar_MaxSize.IntValue);
+		if (g_List_Players.Length > g_Cvar_ListSize.IntValue) {
+			g_List_Players.Resize(g_Cvar_ListSize.IntValue);
 		}
 	}
 	else {
-		g_Players.PushArray(info);
+		g_List_Players.PushArray(info);
 	}
 }
 
@@ -65,9 +65,9 @@ public Action Command_ListDisconnections(int client, int args)
 	PrintToConsole(client, "Disconnections list");
 	PrintToConsole(client, "-------------------------");
 	
-	for (int i = 0; i < g_Players.Length; i++)
+	for (int i = 0; i < g_List_Players.Length; i++)
 	{
-		g_Players.GetArray(i, info);
+		g_List_Players.GetArray(i, info);
 		
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
 		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, time);
