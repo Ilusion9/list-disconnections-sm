@@ -96,4 +96,3 @@ int FormatTimeDuration(char[] buffer, int maxlen, int time)
 	
 	return Format(buffer, maxlen, "%ds", time % 60);		
 }
- 
