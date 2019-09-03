@@ -1,6 +1,8 @@
 # Disconnections list
 This plugin will display informations about the last disconnected players through sm_listdc command.
 
+Alliedmods: https://forums.alliedmods.net/showthread.php?t=314886
+
 # Output example
 ```
 Disconnections list
