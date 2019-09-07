@@ -5,12 +5,12 @@ Alliedmods: https://forums.alliedmods.net/showthread.php?t=314886
 
 # Commands
 ```
-sm_listdc
+sm_listdc - will show the last sm_listdc_size disconnected players
 ```
 
 # ConVars
 ```
-sm_listdc_size 10
+sm_listdc_size 10 // How many players will be kept in the disconnections list?
 ```
 
 # Output example
