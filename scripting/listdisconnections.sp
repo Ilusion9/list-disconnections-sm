@@ -7,7 +7,7 @@ public Plugin myinfo =
 {
     name = "Disconnections list",
     author = "Ilusion9",
-    description = "Informations about the last disconnected players.",
+    description = "Informations about the last disconnected players",
     version = "2.1",
     url = "https://github.com/Ilusion9/"
 };
