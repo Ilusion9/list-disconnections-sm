@@ -49,7 +49,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	
 	if (g_List_Players.Length)
 	{
-		if (!g_Cvar_ListKeepDuplicates.BoolValue)	{
+		if (!g_Cvar_ListKeepDuplicates.BoolValue) {
 			RemovePlayerFromList(info.steam);
 		}
 		
