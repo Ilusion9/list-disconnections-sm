@@ -22,14 +22,14 @@ enum struct PlayerInfo
 ArrayList g_List_Players;
 
 ConVar g_Cvar_ListSize;
-ConVar g_Cvar_ListRemoveDuplicates;
+ConVar g_Cvar_RemoveDuplicates;
 
 public void OnPluginStart()
 {
 	g_List_Players = new ArrayList(sizeof(PlayerInfo));
 	
 	g_Cvar_ListSize = CreateConVar("sm_listdc_size", "10", "How many players will be shown in the disconnections list?", 0, true, 1.0);
-	g_Cvar_ListRemoveDuplicates = CreateConVar("sm_listdc_remove_duplicates", "1", "Remove duplicate steamids from the disconnections list?", 0, true, 0.0, true, 1.0);
+	g_Cvar_RemoveDuplicates = CreateConVar("sm_listdc_remove_duplicates", "1", "Remove duplicate steamids from the disconnections list?", 0, true, 0.0, true, 1.0);
 
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	RegConsoleCmd("sm_listdc", Command_ListDisconnections);
@@ -40,19 +40,19 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	PlayerInfo info;
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
-	if (StrEqual(info.steam, "BOT", false)) {
+	if (StrEqual(info.steam, "BOT", true)) {
 		return;
 	}
 	
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	info.time = GetTime();
 	
+	if (g_Cvar_RemoveDuplicates.BoolValue) {
+		RemoveSteamIdFromList(info.steam);
+	}
+	
 	if (g_List_Players.Length)
 	{
-		if (g_Cvar_ListRemoveDuplicates.BoolValue) {
-			RemoveSteamIdFromList(info.steam);
-		}
-		
 		g_List_Players.ShiftUp(0);
 		g_List_Players.SetArray(0, info);
 		
@@ -92,7 +92,7 @@ void RemoveSteamIdFromList(const char[] steam)
 	{
 		g_List_Players.GetArray(i, buffer);
 		
-		if (StrEqual(buffer.steam, steam, false)) {
+		if (StrEqual(buffer.steam, steam, true)) {
 			g_List_Players.Erase(i);
 		}
 	}
