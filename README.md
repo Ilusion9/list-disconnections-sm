@@ -11,6 +11,7 @@ sm_listdc - show the last disconnected players
 # ConVars
 ```
 sm_listdc_size 10 // How many players will be shown in the disconnections list?
+sm_listdc_keep_duplicates 1 // Keep duplicate steamids in the disconnections list?
 ```
 
 # Output example
