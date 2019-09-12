@@ -59,7 +59,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 			}
 		}
 	}
-	
+		
 	if (g_List_Players.Length)
 	{
 		g_List_Players.ShiftUp(0);
