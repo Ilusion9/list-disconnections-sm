@@ -20,14 +20,14 @@ enum struct PlayerInfo
 ArrayList g_List_Players;
 
 ConVar g_Cvar_ListSize;
-ConVar g_Cvar_RemoveDuplicates;
+ConVar g_Cvar_Duplicates;
 
 public void OnPluginStart()
 {
 	g_List_Players = new ArrayList(sizeof(PlayerInfo));
 	
 	g_Cvar_ListSize = CreateConVar("sm_listdc_size", "10", "How many players will be shown in the disconnections list?", 0, true, 1.0);
-	g_Cvar_RemoveDuplicates = CreateConVar("sm_listdc_remove_duplicates", "1", "Remove duplicate steamids from the disconnections list?", 0, true, 0.0, true, 1.0);
+	g_Cvar_Duplicates = CreateConVar("sm_listdc_duplicates", "0", "Keep duplicate players in the disconnections list?", 0, true, 0.0, true, 1.0);
 
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	RegConsoleCmd("sm_listdc", Command_ListDisconnections);
@@ -45,7 +45,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	info.time = GetTime();
 	
-	if (g_Cvar_RemoveDuplicates.BoolValue)
+	if (!g_Cvar_Duplicates.BoolValue)
 	{
 		PlayerInfo buffer;
 		for (int i = g_List_Players.Length - 1; i >= 0; i--)
