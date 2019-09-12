@@ -18,17 +18,13 @@ enum struct PlayerInfo
 }
 
 ArrayList g_List_Players;
-
 ConVar g_Cvar_ListSize;
-ConVar g_Cvar_Duplicates;
 
 public void OnPluginStart()
 {
 	g_List_Players = new ArrayList(sizeof(PlayerInfo));
-	
 	g_Cvar_ListSize = CreateConVar("sm_listdc_size", "10", "How many players will be shown in the disconnections list?", 0, true, 1.0);
-	g_Cvar_Duplicates = CreateConVar("sm_listdc_duplicates", "0", "Keep duplicate players in the disconnections list?", 0, true, 0.0, true, 1.0);
-
+	
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	RegConsoleCmd("sm_listdc", Command_ListDisconnections);
 }
@@ -45,30 +41,19 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	info.time = GetTime();
 	
-	if (!g_Cvar_Duplicates.BoolValue)
+	if (!g_List_Players.Length)
 	{
-		PlayerInfo buffer;
-		for (int i = g_List_Players.Length - 1; i >= 0; i--)
-		{
-			g_List_Players.GetArray(i, buffer);
-			
-			if (StrEqual(buffer.steam, info.steam, true)) {
-				g_List_Players.Erase(i);
-			}
-		}
-	}
-		
-	if (g_List_Players.Length)
-	{
-		g_List_Players.ShiftUp(0);
-		g_List_Players.SetArray(0, info);
-		
-		if (g_List_Players.Length > g_Cvar_ListSize.IntValue) {
-			g_List_Players.Resize(g_Cvar_ListSize.IntValue);
-		}
-	}
-	else {
 		g_List_Players.PushArray(info);
+		return;
+	}
+	
+	RemoveSteamIdFromList(info.steam);
+	
+	g_List_Players.ShiftUp(0);
+	g_List_Players.SetArray(0, info);
+	
+	if (g_List_Players.Length > g_Cvar_ListSize.IntValue) {
+		g_List_Players.Resize(g_Cvar_ListSize.IntValue);
 	}
 }
 
@@ -89,6 +74,20 @@ public Action Command_ListDisconnections(int client, int args)
 	}
 	
 	return Plugin_Handled;
+}
+
+void RemoveSteamIdFromList(const char[] steam)
+{
+	PlayerInfo buffer;
+	for (int i = 0; i < g_List_Players.Length; i++)
+	{
+		g_List_Players.GetArray(i, buffer);
+		if (StrEqual(buffer.steam, info.steam, true))
+		{
+			g_List_Players.Erase(i);
+			return;
+		}
+	}
 }
 
 int FormatTimeDuration(char[] buffer, int maxlen, int time)
