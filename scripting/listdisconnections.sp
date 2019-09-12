@@ -47,8 +47,17 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	info.time = GetTime();
 	
-	if (g_Cvar_RemoveDuplicates.BoolValue) {
-		RemoveSteamIdFromList(info.steam);
+	if (g_Cvar_RemoveDuplicates.BoolValue)
+	{
+		PlayerInfo buffer;
+		for (int i = g_List_Players.Length - 1; i >= 0; i--)
+		{
+			g_List_Players.GetArray(i, buffer);
+			
+			if (StrEqual(buffer.steam, info.steam, true)) {
+				g_List_Players.Erase(i);
+			}
+		}
 	}
 	
 	if (g_List_Players.Length)
@@ -82,20 +91,6 @@ public Action Command_ListDisconnections(int client, int args)
 	}
 	
 	return Plugin_Handled;
-}
-
-void RemoveSteamIdFromList(const char[] steam)
-{
-	PlayerInfo buffer;
-	
-	for (int i = g_List_Players.Length - 1; i >= 0; i--)
-	{
-		g_List_Players.GetArray(i, buffer);
-		
-		if (StrEqual(buffer.steam, steam, true)) {
-			g_List_Players.Erase(i);
-		}
-	}
 }
 
 int FormatTimeDuration(char[] buffer, int maxlen, int time)
