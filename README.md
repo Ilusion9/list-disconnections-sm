@@ -1,7 +1,11 @@
-# Disconnections list
+# Description
 This plugin will display informations about the last disconnected players.
 
-Alliedmods: https://forums.alliedmods.net/showthread.php?t=314886
+# Dependencies
+You need at least sourcemod 1.10, because this plugin is using enum structs.
+
+# Alliedmods
+https://forums.alliedmods.net/showthread.php?t=314886
 
 # Commands
 ```
