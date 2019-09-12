@@ -50,7 +50,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	if (g_List_Players.Length)
 	{
 		if (!g_Cvar_ListKeepDuplicates.BoolValue) {
-			RemovePlayerFromList(info.steam);
+			RemoveSteamIdFromList(info.steam);
 		}
 		
 		g_List_Players.ShiftUp(0);
@@ -84,7 +84,7 @@ public Action Command_ListDisconnections(int client, int args)
 	return Plugin_Handled;
 }
 
-void RemovePlayerFromList(const char[] steam)
+void RemoveSteamIdFromList(const char[] steam)
 {
 	PlayerInfo buffer;
 	
