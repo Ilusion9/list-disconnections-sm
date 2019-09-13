@@ -9,7 +9,7 @@ https://forums.alliedmods.net/showthread.php?t=314886
 
 # Commands
 ```
-sm_disconnections - show the last disconnected players
+sm_disconnections // Show the disconnections list
 ```
 
 # ConVars
