@@ -14,7 +14,7 @@ sm_disconnections - show the last disconnected players
 
 # ConVars
 ```
-sm_disconnections_size 15 // How many players will be shown in the disconnections list?
+sm_disconnections_list_size 15 // How many players will be shown in the disconnections list?
 ```
 
 # Output example
