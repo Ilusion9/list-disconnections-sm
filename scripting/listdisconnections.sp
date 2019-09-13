@@ -82,7 +82,7 @@ void RemoveSteamIdFromList(const char[] steam)
 	for (int i = 0; i < g_List_Players.Length; i++)
 	{
 		g_List_Players.GetArray(i, buffer);
-		if (StrEqual(buffer.steam, info.steam, true))
+		if (StrEqual(buffer.steam, steam, true))
 		{
 			g_List_Players.Erase(i);
 			return;
