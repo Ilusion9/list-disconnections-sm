@@ -3,7 +3,7 @@
 
 public Plugin myinfo =
 {
-    name = "Disconnections list",
+    name = "Disconnections List",
     author = "Ilusion9",
     description = "Informations about the last disconnected players",
     version = "2.0",
@@ -23,10 +23,10 @@ ConVar g_Cvar_ListSize;
 public void OnPluginStart()
 {
 	g_List_Players = new ArrayList(sizeof(PlayerInfo));
-	g_Cvar_ListSize = CreateConVar("sm_listdc_size", "10", "How many players will be shown in the disconnections list?", 0, true, 1.0);
+	g_Cvar_ListSize = CreateConVar("sm_disconnections_list_size", "15", "How many players will be shown in the disconnections list?", 0, true, 1.0);
 	
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
-	RegConsoleCmd("sm_listdc", Command_ListDisconnections);
+	RegConsoleCmd("sm_disconnections", Command_ListDisconnections);
 }
 
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
@@ -62,7 +62,7 @@ public Action Command_ListDisconnections(int client, int args)
 	char time[64];
 	PlayerInfo info;
 	
-	PrintToConsole(client, "Disconnections list");
+	PrintToConsole(client, "Disconnections List");
 	PrintToConsole(client, "-------------------------");
 	
 	for (int i = 0; i < g_List_Players.Length; i++)
