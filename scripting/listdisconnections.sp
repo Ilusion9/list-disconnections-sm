@@ -1,6 +1,6 @@
 #include <sourcemod>
 #pragma newdecls required
-
+ 
 public Plugin myinfo =
 {
     name = "Disconnections List",
