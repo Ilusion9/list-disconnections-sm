@@ -30,10 +30,11 @@ public void OnPluginStart()
 }
 
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
-{	
+{
 	PlayerInfo info;
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
+	/* Don't save informations about bots */
 	if (StrEqual(info.steam, "BOT", true))
 	{
 		return;
@@ -49,11 +50,14 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 		g_List_Players.PushArray(info);
 		return;
 	}
-		
+	
+	/* Treat the list as a stack */
 	g_List_Players.ShiftUp(0);
 	g_List_Players.SetArray(0, info);
 	
-	if (g_List_Players.Length > g_Cvar_ListSize.IntValue) {
+	/* Keep maximum sm_disconnections_list_size elements into the list */
+	if (g_List_Players.Length > g_Cvar_ListSize.IntValue)
+	{
 		g_List_Players.Resize(g_Cvar_ListSize.IntValue);
 	}
 }
@@ -68,6 +72,7 @@ public Action Command_ListDisconnections(int client, int args)
 	{
 		g_List_Players.GetArray(i, info);
 		
+		/* Transform the unix time into "d h m ago" format */
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
 		PrintToConsole(client, "  %2d. %s : %s : %s ago", i + 1, info.steam, info.name, time);
 	}
@@ -80,11 +85,11 @@ void RemoveSteamIdFromList(const char[] steam)
 	PlayerInfo buffer;
 	for (int i = 0; i < g_List_Players.Length; i++)
 	{
-		g_List_Players.GetArray(i, buffer);
-		if (StrEqual(buffer.steam, steam, true))
+		g_List_Players.GetArray(i, buffer);	
+		if (StrEqual(steam, buffer.steam, true))
 		{
 			g_List_Players.Erase(i);
-			return;
+			break;
 		}
 	}
 }
