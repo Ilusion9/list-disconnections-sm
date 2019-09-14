@@ -34,21 +34,22 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	PlayerInfo info;
 	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
-	if (StrEqual(info.steam, "BOT", true)) {
+	if (StrEqual(info.steam, "BOT", true))
+	{
 		return;
 	}
 	
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	info.time = GetTime();
 	
+	RemoveSteamIdFromList(info.steam);
+	
 	if (!g_List_Players.Length)
 	{
 		g_List_Players.PushArray(info);
 		return;
 	}
-	
-	RemoveSteamIdFromList(info.steam);
-	
+		
 	g_List_Players.ShiftUp(0);
 	g_List_Players.SetArray(0, info);
 	
@@ -63,7 +64,6 @@ public Action Command_ListDisconnections(int client, int args)
 	PlayerInfo info;
 	
 	PrintToConsole(client, "Disconnections List:");
-	
 	for (int i = 0; i < g_List_Players.Length; i++)
 	{
 		g_List_Players.GetArray(i, info);
@@ -71,6 +71,7 @@ public Action Command_ListDisconnections(int client, int args)
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
 		PrintToConsole(client, "  %2d. %s : %s : %s ago", i + 1, info.steam, info.name, time);
 	}
+	
 	return Plugin_Handled;
 }
 
@@ -94,15 +95,18 @@ int FormatTimeDuration(char[] buffer, int maxlen, int time)
 	int hours = (time / 3600) % 24;
 	int minutes = (time / 60) % 60;
 	
-	if (days) {
+	if (days)
+	{
 		return Format(buffer, maxlen, "%dd %dh %dm", days, hours, minutes);		
 	}
 	
-	if (hours) {
+	if (hours)
+	{
 		return Format(buffer, maxlen, "%dh %dm", hours, minutes);		
 	}
 	
-	if (minutes) {
+	if (minutes)
+	{
 		return Format(buffer, maxlen, "%dm", minutes);		
 	}
 	
