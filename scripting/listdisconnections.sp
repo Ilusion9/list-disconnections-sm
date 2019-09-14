@@ -3,7 +3,7 @@
 
 public Plugin myinfo =
 {
-    name = "Disconnections List",
+    name = "List Disconnections",
     author = "Ilusion9",
     description = "Informations about the last disconnected players",
     version = "2.0",
@@ -62,17 +62,15 @@ public Action Command_ListDisconnections(int client, int args)
 	char time[64];
 	PlayerInfo info;
 	
-	PrintToConsole(client, "Disconnections List");
-	PrintToConsole(client, "-------------------------");
+	PrintToConsole(client, "Disconnections List:");
 	
 	for (int i = 0; i < g_List_Players.Length; i++)
 	{
 		g_List_Players.GetArray(i, info);
 		
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
-		PrintToConsole(client, "%02d. %s \"%s\" - %s ago", i + 1, info.steam, info.name, time);
+		PrintToConsole(client, "  %2d. %s : %s : %s ago", i + 1, info.steam, info.name, time);
 	}
-	
 	return Plugin_Handled;
 }
 
