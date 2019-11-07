@@ -3,11 +3,11 @@
 
 public Plugin myinfo =
 {
-    name = "List Disconnections",
-    author = "Ilusion9",
-    description = "Informations about the last disconnected players",
-    version = "2.0",
-    url = "https://github.com/Ilusion9/"
+	name = "List Disconnections",
+	author = "Ilusion9",
+	description = "Informations about the last disconnected players",
+	version = "2.0",
+	url = "https://github.com/Ilusion9/"
 };
 
 enum struct PlayerInfo
