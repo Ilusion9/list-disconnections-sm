@@ -27,6 +27,8 @@ public void OnPluginStart()
 	
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	RegConsoleCmd("sm_disconnections", Command_ListDisconnections);
+	
+	AutoExecConfig(true, "listdisconnections");
 }
 
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
