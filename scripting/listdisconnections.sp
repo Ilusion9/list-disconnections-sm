@@ -23,7 +23,7 @@ ConVar g_Cvar_ListSize;
 public void OnPluginStart()
 {
 	g_List_Players = new ArrayList(sizeof(PlayerInfo));
-	g_Cvar_ListSize = CreateConVar("sm_disconnections_list_size", "15", "How many players will be shown in the disconnections list?", 0, true, 1.0);
+	g_Cvar_ListSize = CreateConVar("sm_disconnections_list_size", "15", "How many players will be shown in the disconnections list?", FCVAR_NONE, true, 1.0);
 	
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	RegConsoleCmd("sm_disconnections", Command_ListDisconnections);
@@ -34,8 +34,8 @@ public void OnPluginStart()
 public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
 {
 	PlayerInfo info;
-	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	
+	event.GetString("networkid", info.steam, sizeof(PlayerInfo::steam));
 	if (StrEqual(info.steam, "BOT", true))
 	{
 		return;
@@ -44,8 +44,7 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	event.GetString("name", info.name, sizeof(PlayerInfo::name));
 	info.time = GetTime();
 	
-	RemoveSteamIdFromList(info.steam);
-	
+	RemovePlayerFromList(info.steam);
 	if (!g_List_Players.Length)
 	{
 		g_List_Players.PushArray(info);
@@ -71,7 +70,7 @@ public Action Command_ListDisconnections(int client, int args)
 	{
 		g_List_Players.GetArray(i, info);
 		
-		/* Transform the unix time into "d h m ago" format */
+		// Transform the unix time into "d h m ago" format type
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.time);
 		PrintToConsole(client, "  %2d. %s : %s : %s ago", i + 1, info.steam, info.name, time);
 	}
@@ -79,16 +78,16 @@ public Action Command_ListDisconnections(int client, int args)
 	return Plugin_Handled;
 }
 
-void RemoveSteamIdFromList(const char[] steam)
+void RemovePlayerFromList(const char[] steam)
 {
-	PlayerInfo buffer;
+	PlayerInfo info;
 	for (int i = 0; i < g_List_Players.Length; i++)
 	{
-		g_List_Players.GetArray(i, buffer);	
-		if (StrEqual(steam, buffer.steam, true))
+		g_List_Players.GetArray(i, info);	
+		if (StrEqual(steam, info.steam, true))
 		{
 			g_List_Players.Erase(i);
-			break;
+			return;
 		}
 	}
 }
