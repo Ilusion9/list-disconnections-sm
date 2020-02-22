@@ -12,27 +12,35 @@ public Plugin myinfo =
 
 enum struct PlayerInfo
 {
-	char Steam[64];
-	char Name[64];
-	char Ip[64];
-	int Time;
+	char steamId[64];
+	char clientName[64];
+	char clientIp[64];
+	int unixTime;
 }
 
 ArrayList g_List_Players;
-ConVar g_Cvar_ListSize;
+ConVar g_Cvar_MaxLength;
 
 public void OnPluginStart()
 {
 	g_List_Players = new ArrayList(sizeof(PlayerInfo));
-	g_Cvar_ListSize = CreateConVar("sm_disconnections_list_size", "15", "How many players will be shown in the disconnections list?", FCVAR_NONE, true, 1.0);
+	g_Cvar_MaxLength = CreateConVar("sm_disconnections_maxlen", "15", "How many players will be shown in the disconnections list?", FCVAR_NONE, true, 0.0);
 	
+	g_Cvar_MaxLength.AddChangeHook(ConVarChange_DisconnectionsSize);
 	RegConsoleCmd("sm_disconnections", Command_ListDisconnections);
-	AutoExecConfig(true, "listdisconnections");
+}
+
+public void ConVarChange_DisconnectionsSize(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	if (g_List_Players.Length > g_Cvar_MaxLength.IntValue)
+	{
+		g_List_Players.Resize(g_Cvar_MaxLength.IntValue);
+	}
 }
 
 public void OnClientPostAdminCheck(int client)
 {
-	if (IsFakeClient(client))
+	if (IsFakeClient(client) || !g_Cvar_MaxLength.IntValue)
 	{
 		return;
 	}
@@ -44,30 +52,30 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnClientDisconnect(int client)
 {
-	if (IsFakeClient(client))
+	if (IsFakeClient(client) || !g_Cvar_MaxLength.IntValue)
 	{
 		return;
 	}
 	
-	PlayerInfo info;
-	info.Time = GetTime();
+	PlayerInfo info;	
+	info.unixTime = GetTime();
 	
-	if (!GetClientAuthId(client, AuthId_Steam2, info.Steam, sizeof(PlayerInfo::Steam)))
+	if (!GetClientAuthId(client, AuthId_Steam2, info.steamId, sizeof(PlayerInfo::steamId)))
 	{
-		Format(info.Steam, sizeof(PlayerInfo::Steam), "N/A");
+		Format(info.steamId, sizeof(PlayerInfo::steamId), "N/A");
 	}
 	
-	if (!GetClientName(client, info.Name, sizeof(PlayerInfo::Name)))
+	if (!GetClientName(client, info.clientName, sizeof(PlayerInfo::clientName)))
 	{
-		Format(info.Name, sizeof(PlayerInfo::Name), "N/A");
+		Format(info.clientName, sizeof(PlayerInfo::clientName), "N/A");
 	}
 	
-	if (!GetClientIP(client, info.Ip, sizeof(PlayerInfo::Ip)))
+	if (!GetClientIP(client, info.clientIp, sizeof(PlayerInfo::clientIp)))
 	{
-		Format(info.Ip, sizeof(PlayerInfo::Ip), "N/A");
+		Format(info.clientIp, sizeof(PlayerInfo::clientIp), "N/A");
 	}
 	
-	RemovePlayerFromList(info.Steam);
+	RemovePlayerFromList(info.steamId);
 	if (!g_List_Players.Length)
 	{
 		g_List_Players.PushArray(info);
@@ -76,9 +84,9 @@ public void OnClientDisconnect(int client)
 	
 	g_List_Players.ShiftUp(0);
 	g_List_Players.SetArray(0, info);
-	if (g_List_Players.Length > g_Cvar_ListSize.IntValue)
+	if (g_List_Players.Length > g_Cvar_MaxLength.IntValue)
 	{
-		g_List_Players.Resize(g_Cvar_ListSize.IntValue);
+		g_List_Players.Resize(g_Cvar_MaxLength.IntValue);
 	}
 }
 
@@ -93,8 +101,8 @@ public Action Command_ListDisconnections(int client, int args)
 		g_List_Players.GetArray(i, info);
 		
 		// Transform the unix time into "d h m ago" format type
-		FormatTimeDuration(time, sizeof(time), GetTime() - info.Time);
-		PrintToConsole(client, "  %2d. %s : %s : %s : %s ago", i + 1, info.Steam, info.Name, info.Ip, time);
+		FormatTimeDuration(time, sizeof(time), GetTime() - info.unixTime);
+		PrintToConsole(client, "  %2d. %s : %s : %s : %s ago", i + 1, info.steamId, info.clientName, info.clientIp, time);
 	}
 	
 	return Plugin_Handled;
@@ -106,12 +114,12 @@ void RemovePlayerFromList(const char[] steamId)
 	for (int i = 0; i < g_List_Players.Length; i++)
 	{
 		g_List_Players.GetArray(i, info);
-		if (steamId[8] != info.Steam[8])
+		if (steamId[8] != info.steamId[8])
 		{
 			continue;
 		}
 		
-		if (StrEqual(steamId[10], info.Steam[10], true))
+		if (StrEqual(steamId[10], info.steamId[10], true))
 		{
 			g_List_Players.Erase(i);
 			return;
