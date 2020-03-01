@@ -11,7 +11,7 @@ sm_disconnections // Show the disconnections list
 
 # ConVars
 ```
-sm_disconnections_list_size 15 // How many players will be shown in the disconnections list?
+sm_disconnections_maxsize 15 // How many players will be shown in the disconnections list?
 ```
 
 # Output example
