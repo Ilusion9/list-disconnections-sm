@@ -24,7 +24,7 @@ ConVar g_Cvar_MaxLength;
 public void OnPluginStart()
 {
 	g_List_Players = new ArrayList(sizeof(PlayerInfo));
-	g_Cvar_MaxLength = CreateConVar("sm_disconnections_maxlen", "15", "How many players will be shown in the disconnections list?", FCVAR_NONE, true, 0.0);
+	g_Cvar_MaxLength = CreateConVar("sm_disconnections_maxsize", "15", "How many players will be shown in the disconnections list?", FCVAR_NONE, true, 0.0);
 	
 	g_Cvar_MaxLength.AddChangeHook(ConVarChange_DisconnectionsSize);
 	RegConsoleCmd("sm_disconnections", Command_ListDisconnections);
