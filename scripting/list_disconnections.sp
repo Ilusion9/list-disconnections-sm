@@ -134,7 +134,7 @@ public Action Command_ListDisconnections(int client, int args)
 	FillStringWithSpaces(nameTitle, nameLen);
 	FillStringWithSpaces(ipTitle, ipLen);
 	
-	PrintToConsole(client, "#   %s   %s   %s   Time", steamTitle, nameTitle, ipTitle);
+	PrintToConsole(client, "#   %s   %s   %s   Disconnected", steamTitle, nameTitle, ipTitle);
 
 	for (int i = 0; i < g_List_Players.Length; i++)
 	{
