@@ -5,8 +5,8 @@ public Plugin myinfo =
 {
 	name = "List Disconnections",
 	author = "Ilusion9",
-	description = "Informations about the last disconnected players",
-	version = "2.0",
+	description = "Informations about the last disconnected players.",
+	version = "2.1",
 	url = "https://github.com/Ilusion9/"
 };
 
@@ -22,7 +22,7 @@ ArrayList g_List_Players;
 ConVar g_Cvar_MaxLength;
 
 public void OnPluginStart()
-{
+{	
 	g_List_Players = new ArrayList(sizeof(PlayerInfo));
 	g_Cvar_MaxLength = CreateConVar("sm_disconnections_maxsize", "15", "How many players will be shown in the disconnections list?", FCVAR_NONE, true, 0.0);
 	
@@ -92,17 +92,60 @@ public void OnClientDisconnect(int client)
 
 public Action Command_ListDisconnections(int client, int args)
 {
+	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
+	{
+		PrintToChat(client, "See console for output.");
+	}
+	
+	PrintToConsole(client, "Disconnections List:");
+	if (!g_List_Players.Length)
+	{
+		PrintToConsole(client, "No data available.");
+		return Plugin_Handled;
+	}
+	
+	PrintToConsole(client, "\n");
 	char time[64];
 	PlayerInfo info;
 	
-	PrintToConsole(client, "Disconnections List:");
+	g_List_Players.GetArray(0, info);
+	int steamLen = strlen(info.steamId);
+	int nameLen = strlen(info.clientName);
+	int ipLen = strlen(info.clientIp);
+	
+	int length;
+	for (int i = 1; i < g_List_Players.Length; i++)
+	{
+		g_List_Players.GetArray(0, info);
+		length = strlen(info.steamId);
+		steamLen = length > steamLen ? length : steamLen;
+
+		length = strlen(info.clientName);
+		nameLen = length > nameLen ? length : nameLen;
+		
+		length = strlen(info.clientIp);
+		ipLen = length > ipLen ? length : ipLen;
+	}
+		
+	char steamTitle[64] = "Steam";
+	char nameTitle[64] = "Name";
+	char ipTitle[64] = "Ip";
+	FillStringWithSpaces(steamTitle, steamLen);
+	FillStringWithSpaces(nameTitle, nameLen);
+	FillStringWithSpaces(ipTitle, ipLen);
+	
+	PrintToConsole(client, "#   %s   %s   %s   Time", steamTitle, nameTitle, ipTitle);
+
 	for (int i = 0; i < g_List_Players.Length; i++)
 	{
 		g_List_Players.GetArray(i, info);
+		FillStringWithSpaces(info.steamId, steamLen);
+		FillStringWithSpaces(info.clientName, nameLen);
+		FillStringWithSpaces(info.clientIp, ipLen);
 		
 		// Transform the unix time into "d h m ago" format type
 		FormatTimeDuration(time, sizeof(time), GetTime() - info.unixTime);
-		PrintToConsole(client, "  %2d. %s : %s : %s : %s ago", i + 1, info.steamId, info.clientName, info.clientIp, time);
+		PrintToConsole(client, "%02d. %s   %s   %s   %s ago", i + 1, info.steamId, info.clientName, info.clientIp, time);
 	}
 	
 	return Plugin_Handled;
@@ -125,6 +168,21 @@ void RemovePlayerFromList(const char[] steamId)
 			return;
 		}
 	}
+}
+
+void FillStringWithSpaces(char[] buffer, int maxlen)
+{
+	int index, length = strlen(buffer);
+	if (length >= maxlen)
+	{
+		return;
+	}
+	
+	for (index = length; index < maxlen; index++)
+	{
+		buffer[index] = ' ';
+	}
+	buffer[index] = '\0';
 }
 
 int FormatTimeDuration(char[] buffer, int maxlen, int time)
