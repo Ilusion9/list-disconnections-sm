@@ -18,6 +18,17 @@ enum struct PlayerInfo
 	int unixTime;
 }
 
+enum struct PlayerInfoDisplay
+{
+	char steamId[64];
+	int steamLen;
+	char clientName[64];
+	int nameLen;
+	char clientIp[64];
+	int ipLen;
+	char disconTime[64];
+}
+
 ArrayList g_List_LastPlayers;
 ConVar g_Cvar_MaxLength;
 
@@ -97,7 +108,7 @@ public Action Command_ListDisconnections(int client, int args)
 		PrintToChat(client, "See console for output.");
 	}
 	
-	PrintToConsole(client, "Last Disconnections:");
+	PrintToConsole(client, "Disconnections List:");
 	if (!g_List_LastPlayers.Length)
 	{
 		PrintToConsole(client, "No data available.");
@@ -105,47 +116,43 @@ public Action Command_ListDisconnections(int client, int args)
 	}
 	
 	PrintToConsole(client, " ");
-	char time[64];
+	
 	PlayerInfo info;
+	int maxFormatSteamLen, maxFormatNameLen, maxFormatIpLen, currentTime = GetTime();
+	PlayerInfoDisplay[] infoDisplay = new PlayerInfoDisplay[g_List_LastPlayers.Length];
 	
-	g_List_LastPlayers.GetArray(0, info);
-	int steamLen = strlen(info.steamId);
-	int nameLen = strlen(info.clientName);
-	int ipLen = strlen(info.clientIp);
-	
-	int length;
-	for (int i = 1; i < g_List_LastPlayers.Length; i++)
-	{
-		g_List_LastPlayers.GetArray(i, info);
-		length = strlen(info.steamId);
-		steamLen = length > steamLen ? length : steamLen;
-
-		length = strlen(info.clientName);
-		nameLen = length > nameLen ? length : nameLen;
-		
-		length = strlen(info.clientIp);
-		ipLen = length > ipLen ? length : ipLen;
-	}
-	
-	char steamTitle[64] = "Steam";
-	char nameTitle[64] = "Name";
-	char ipTitle[64] = "Ip";
-	FillString(steamTitle, steamLen);
-	FillString(nameTitle, nameLen);
-	FillString(ipTitle, ipLen);
-	
-	PrintToConsole(client, "#   %s   %s   %s   Disconnected", steamTitle, nameTitle, ipTitle);
-
 	for (int i = 0; i < g_List_LastPlayers.Length; i++)
 	{
 		g_List_LastPlayers.GetArray(i, info);
-		FillString(info.steamId, steamLen);
-		FillString(info.clientName, nameLen);
-		FillString(info.clientIp, ipLen);
 		
-		// Transform the unix time into "d h m ago" format type
-		FormatTimeDuration(time, sizeof(time), GetTime() - info.unixTime);
-		PrintToConsole(client, "%02d. %s   %s   %s   %s ago", i + 1, info.steamId, info.clientName, info.clientIp, time);
+		infoDisplay[i].steamLen = Format(infoDisplay[i].steamId, sizeof(PlayerInfoDisplay::steamId), "%s", info.steamId);
+		infoDisplay[i].nameLen = Format(infoDisplay[i].clientName, sizeof(PlayerInfoDisplay::clientName), "%s", info.clientName);
+		infoDisplay[i].ipLen = Format(infoDisplay[i].clientIp, sizeof(PlayerInfoDisplay::clientIp), "%s", info.clientIp);
+		FormatTimeDuration(infoDisplay[i].disconTime, sizeof(PlayerInfoDisplay::disconTime), currentTime - info.unixTime);
+		
+		maxFormatSteamLen = infoDisplay[i].steamLen > maxFormatSteamLen ? infoDisplay[i].steamLen : maxFormatSteamLen;
+		maxFormatNameLen = infoDisplay[i].nameLen > maxFormatNameLen ? infoDisplay[i].nameLen : maxFormatNameLen;
+		maxFormatIpLen = infoDisplay[i].ipLen > maxFormatIpLen ? infoDisplay[i].ipLen : maxFormatIpLen;
+	}
+	
+	char steamTitle[sizeof(PlayerInfoDisplay::steamId)] = "Steam";
+	char nameTitle[sizeof(PlayerInfoDisplay::clientName)] = "Name";
+	char ipTitle[sizeof(PlayerInfoDisplay::clientIp)] = "Ip";
+	char disconTitle[sizeof(PlayerInfoDisplay::disconTime)] = "Disconnected";
+	
+	FillString(steamTitle, sizeof(steamTitle), 5, maxFormatSteamLen);
+	FillString(nameTitle, sizeof(nameTitle), 4, maxFormatNameLen);
+	FillString(ipTitle, sizeof(ipTitle), 2, maxFormatIpLen);
+	
+	PrintToConsole(client, "#   %s   %s   %s   %s", steamTitle, nameTitle, ipTitle, disconTitle);
+
+	for (int i = 0; i < g_List_LastPlayers.Length; i++)
+	{
+		FillString(infoDisplay[i].steamId, sizeof(PlayerInfoDisplay::steamId), infoDisplay[i].steamLen, maxFormatSteamLen);
+		FillString(infoDisplay[i].clientName, sizeof(PlayerInfoDisplay::clientName), infoDisplay[i].nameLen, maxFormatNameLen);
+		FillString(infoDisplay[i].clientIp, sizeof(PlayerInfoDisplay::clientIp), infoDisplay[i].ipLen, maxFormatIpLen);
+		
+		PrintToConsole(client, "%02d. %s   %s   %s   %s ago", i + 1, infoDisplay[i].steamId, infoDisplay[i].clientName, infoDisplay[i].clientIp, infoDisplay[i].disconTime);
 	}
 	
 	return Plugin_Handled;
@@ -171,19 +178,19 @@ void RemovePlayerFromList(const char[] steamId)
 }
 
 // Fill string with "space" characters
-void FillString(char[] buffer, int maxlen)
+void FillString(char[] buffer, int maxsize, int start, int end)
 {
-	int index, length = strlen(buffer);
-	if (length >= maxlen)
+	int index;
+	if (start >= end || start >= maxsize)
 	{
 		return;
 	}
 	
-	for (index = length; index < maxlen; index++)
+	for (index = start; index < end && index < maxsize; index++)
 	{
 		buffer[index] = ' ';
 	}
-	buffer[index] = '\0';
+	buffer[end] = '\0';
 }
 
 // Transform unix time into "d h m" format type
