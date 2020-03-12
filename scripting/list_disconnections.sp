@@ -33,7 +33,9 @@ ArrayList g_List_LastPlayers;
 ConVar g_Cvar_MaxLength;
 
 public void OnPluginStart()
-{	
+{
+	LoadTranslations("common.phrases");
+	
 	g_List_LastPlayers = new ArrayList(sizeof(PlayerInfo));
 	g_Cvar_MaxLength = CreateConVar("sm_disconnections_maxsize", "15", "How many players will be shown in the disconnections history?", FCVAR_NONE, true, 0.0);
 	
@@ -105,7 +107,7 @@ public Action Command_ListDisconnections(int client, int args)
 {
 	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
 	{
-		PrintToChat(client, "See console for output.");
+		PrintToChat(client, "%t", "See console for output");
 	}
 	
 	PrintToConsole(client, "Disconnections List:");
@@ -118,7 +120,7 @@ public Action Command_ListDisconnections(int client, int args)
 	PrintToConsole(client, " ");
 	
 	PlayerInfo info;
-	int maxFormatSteamLen, maxFormatNameLen, maxFormatIpLen, currentTime = GetTime();
+	int maxFormatSteamLen = 5, maxFormatNameLen = 4, maxFormatIpLen = 2, currentTime = GetTime();
 	PlayerInfoDisplay[] infoDisplay = new PlayerInfoDisplay[g_List_LastPlayers.Length];
 	
 	for (int i = 0; i < g_List_LastPlayers.Length; i++)
