@@ -116,7 +116,7 @@ public Action Command_ListDisconnections(int client, int args)
 	int length;
 	for (int i = 1; i < g_List_LastPlayers.Length; i++)
 	{
-		g_List_LastPlayers.GetArray(0, info);
+		g_List_LastPlayers.GetArray(i, info);
 		length = strlen(info.steamId);
 		steamLen = length > steamLen ? length : steamLen;
 
