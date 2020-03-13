@@ -75,17 +75,17 @@ public void OnClientDisconnect(int client)
 	
 	if (!GetClientAuthId(client, AuthId_Steam2, info.steamId, sizeof(PlayerInfo::steamId)))
 	{
-		Format(info.steamId, sizeof(PlayerInfo::steamId), "n/a");
+		Format(info.steamId, sizeof(PlayerInfo::steamId), "Not available");
 	}
 	
 	if (!GetClientName(client, info.clientName, sizeof(PlayerInfo::clientName)))
 	{
-		Format(info.clientName, sizeof(PlayerInfo::clientName), "n/a");
+		Format(info.clientName, sizeof(PlayerInfo::clientName), "Not available");
 	}
 	
 	if (!GetClientIP(client, info.clientIp, sizeof(PlayerInfo::clientIp)))
 	{
-		Format(info.clientIp, sizeof(PlayerInfo::clientIp), "n/a");
+		Format(info.clientIp, sizeof(PlayerInfo::clientIp), "Not available");
 	}
 	
 	RemovePlayerFromList(info.steamId);
@@ -120,34 +120,43 @@ public Action Command_ListDisconnections(int client, int args)
 	PrintToConsole(client, " ");
 	
 	PlayerInfo info;
-	int maxFormatSteamLen = 5, maxFormatNameLen = 4, maxFormatIpLen = 2, currentTime = GetTime();
 	PlayerInfoDisplay[] infoDisplay = new PlayerInfoDisplay[g_List_LastPlayers.Length];
-	
-	for (int i = 0; i < g_List_LastPlayers.Length; i++)
-	{
-		g_List_LastPlayers.GetArray(i, info);
-		
-		infoDisplay[i].steamLen = Format(infoDisplay[i].steamId, sizeof(PlayerInfoDisplay::steamId), "%s", info.steamId);
-		infoDisplay[i].nameLen = Format(infoDisplay[i].clientName, sizeof(PlayerInfoDisplay::clientName), "%s", info.clientName);
-		infoDisplay[i].ipLen = Format(infoDisplay[i].clientIp, sizeof(PlayerInfoDisplay::clientIp), "%s", info.clientIp);
-		FormatTimeDuration(infoDisplay[i].disconTime, sizeof(PlayerInfoDisplay::disconTime), currentTime - info.unixTime);
-		
-		maxFormatSteamLen = infoDisplay[i].steamLen > maxFormatSteamLen ? infoDisplay[i].steamLen : maxFormatSteamLen;
-		maxFormatNameLen = infoDisplay[i].nameLen > maxFormatNameLen ? infoDisplay[i].nameLen : maxFormatNameLen;
-		maxFormatIpLen = infoDisplay[i].ipLen > maxFormatIpLen ? infoDisplay[i].ipLen : maxFormatIpLen;
-	}
 	
 	char steamTitle[sizeof(PlayerInfoDisplay::steamId)] = "Steam";
 	char nameTitle[sizeof(PlayerInfoDisplay::clientName)] = "Name";
 	char ipTitle[sizeof(PlayerInfoDisplay::clientIp)] = "Ip";
 	char disconTitle[sizeof(PlayerInfoDisplay::disconTime)] = "Disconnected";
 	
+	// Get max lengths of every header column
+	int maxFormatSteamLen = 5;
+	int maxFormatNameLen = 4;
+	int maxFormatIpLen = 2;
+	int currentTime = GetTime();
+	
+	for (int i = 0; i < g_List_LastPlayers.Length; i++)
+	{
+		g_List_LastPlayers.GetArray(i, info);
+		
+		// Build content columns
+		infoDisplay[i].steamLen = Format(infoDisplay[i].steamId, sizeof(PlayerInfoDisplay::steamId), "%s", info.steamId);
+		infoDisplay[i].nameLen = Format(infoDisplay[i].clientName, sizeof(PlayerInfoDisplay::clientName), "%s", info.clientName);
+		
+		infoDisplay[i].ipLen = Format(infoDisplay[i].clientIp, sizeof(PlayerInfoDisplay::clientIp), "%s", info.clientIp);
+		FormatTimeDuration(infoDisplay[i].disconTime, sizeof(PlayerInfoDisplay::disconTime), currentTime - info.unixTime);
+		
+		// Get max lengths of every content column
+		maxFormatSteamLen = infoDisplay[i].steamLen > maxFormatSteamLen ? infoDisplay[i].steamLen : maxFormatSteamLen;
+		maxFormatNameLen = infoDisplay[i].nameLen > maxFormatNameLen ? infoDisplay[i].nameLen : maxFormatNameLen;
+		maxFormatIpLen = infoDisplay[i].ipLen > maxFormatIpLen ? infoDisplay[i].ipLen : maxFormatIpLen;
+	}
+	
+	// Print header columns
 	FillString(steamTitle, sizeof(steamTitle), 5, maxFormatSteamLen);
 	FillString(nameTitle, sizeof(nameTitle), 4, maxFormatNameLen);
 	FillString(ipTitle, sizeof(ipTitle), 2, maxFormatIpLen);
-	
 	PrintToConsole(client, "#   %s   %s   %s   %s", steamTitle, nameTitle, ipTitle, disconTitle);
-
+	
+	// Print content columns
 	for (int i = 0; i < g_List_LastPlayers.Length; i++)
 	{
 		FillString(infoDisplay[i].steamId, sizeof(PlayerInfoDisplay::steamId), infoDisplay[i].steamLen, maxFormatSteamLen);
